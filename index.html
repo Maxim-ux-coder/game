@@ -241,53 +241,7 @@
       gameOverElement.style.display = 'none';
       levelUpElement.style.display = 'none';
     }
-function updatePowerUps() {
-  for (let i = gameState.powerUps.length - 1; i >= 0; i--) {
-    const powerUp = gameState.powerUps[i];
-    powerUp.timeLeft--;
 
-    if (powerUp.timeLeft <= 0) {
-      gameState.powerUps.splice(i, 1);
-      continue;
-    }
-
-    // Ստուգեք բախումը խաղացողի հետ
-    if (checkCollision(gameState.player, powerUp)) {
-      // Կիրառեք ուժեղացման ազդեցությունը
-      if (powerUp.type === 'speed') {
-        gameState.player.effects.speed = powerUp.duration * 60;
-        addEffect('powerup', gameState.player.x, gameState.player.y);
-      } else if (powerUp.type === 'shield') {
-        gameState.player.effects.shield = powerUp.duration * 60;
-        addEffect('powerup', gameState.player.x, gameState.player.y);
-      } else if (powerUp.type === 'time') {
-        gameState.timeLeft += 10;
-        addEffect('time', gameState.player.x, gameState.player.y);
-      } else if (powerUp.type === 'point') {
-        gameState.score += 20;
-        addEffect('score', gameState.player.x, gameState.player.y);
-      }
-
-      createParticles(powerUp.x, powerUp.y, powerUp.color, 15);
-      gameState.powerUps.splice(i, 1);
-    }
-  }
-}
-    function gameLoop() {
-  if (!gameState.gameOver) {
-    if (!gameState.gamePaused) {
-      handlePlayerMovement();
-      updateObstacles();
-      updatePowerUps();
-      updateEffects();
-      updateParticles();
-      checkTargetCollision();
-    }
-    
-    draw();
-    requestAnimationFrame(gameLoop);
-  }
-}
     // Add a new obstacle
     function addObstacle() {
       const settings = gameDifficulty[gameState.difficulty];
