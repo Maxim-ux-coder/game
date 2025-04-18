@@ -3,43 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pixel Collector</title>
+  <title>Խաղ միավորներով - Enhanced</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Rubik', sans-serif;
+      font-family: 'R', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      height: 100vh;
       margin: 0;
       background: linear-gradient(to bottom, #87CEEB, #4682B4);
-      overflow: auto;
-      color: #333;
-    }
-    
-    .game-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      max-width: 1200px;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-    
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      color: #fff;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      letter-spacing: 1px;
-      width: 100%;
-      text-align: center;
+      overflow: hidden;
     }
     
     .game-container {
@@ -50,38 +28,27 @@
     canvas {
       background: #f0f8ff;
       border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
     
     .controls {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px 25px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
       border-radius: 10px;
       margin-top: 15px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 600px;
-    }
-    
-    .controls p {
-      margin-bottom: 15px;
-      font-weight: 500;
     }
     
     .btn {
       background: #4CAF50;
       color: white;
       border: none;
-      padding: 10px 18px;
+      padding: 8px 15px;
       border-radius: 5px;
       cursor: pointer;
-      margin: 0 8px;
-      font-weight: 600;
-      font-family: 'Rubik', sans-serif;
+      margin: 0 5px;
+      font-weight: bold;
       transition: all 0.2s;
-      font-size: 0.9rem;
-      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     }
     
     .btn:hover {
@@ -89,41 +56,17 @@
       transform: scale(1.05);
     }
     
-    select.btn {
-      background: #2196F3;
-      padding: 9px 15px;
-    }
-    
-    select.btn:hover {
-      background: #1976D2;
-    }
-    
     .game-over {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.8);
       color: white;
-      padding: 25px;
+      padding: 20px;
       border-radius: 10px;
       text-align: center;
       display: none;
-      font-family: 'Rubik', sans-serif;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      width: 250px;
-      z-index: 10;
-    }
-    
-    .game-over h2 {
-      margin-top: 0;
-      color: #FF5252;
-      font-size: 1.8rem;
-    }
-    
-    .game-over p {
-      font-size: 1.2rem;
-      margin: 10px 0;
     }
     
     .level-up {
@@ -131,117 +74,29 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 100, 0, 0.85);
+      background: rgba(0, 100, 0, 0.8);
       color: white;
       padding: 20px;
       border-radius: 10px;
       text-align: center;
       display: none;
-      font-family: 'Rubik', sans-serif;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      z-index: 10;
-    }
-    
-    .level-up h2 {
-      margin-top: 0;
-      color: #8BC34A;
-    }
-    
-    .instructions {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px 25px;
-      border-radius: 10px;
-      width: 300px;
-      font-family: 'Rubik', sans-serif;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      height: fit-content;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    
-    .instructions h2 {
-      color: #333;
-      font-size: 1.4rem;
-      margin-top: 0;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 8px;
-    }
-    
-    .instructions ul {
-      padding-left: 20px;
-    }
-    
-    .instructions li {
-      margin-bottom: 5px;
-    }
-    
-    .fullscreen-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.3);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 5px 10px;
-      cursor: pointer;
-      z-index: 5;
-    }
-    
-    .fullscreen-btn:hover {
-      background: rgba(0, 0, 0, 0.5);
-    }
-    
-    @media (max-width: 1000px) {
-      .game-wrapper {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .instructions {
-        width: 100%;
-        max-width: 600px;
-        margin-top: 20px;
-      }
     }
   </style>
 </head>
 <body>
   <h1>Pixel Collector</h1>
-  
-  <div class="game-wrapper">
-    <div class="game-container">
-      <button id="fullscreenButton" class="fullscreen-btn" title="Toggle Fullscreen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>
-        </svg>
-      </button>
-      <canvas id="gameCanvas" width="600" height="400"></canvas>
-      <div id="gameOver" class="game-over">
-        <h2>Game Over!</h2>
-        <p id="finalScore">Score: 0</p>
-        <p id="finalLevel">Level: 1</p>
-        <button id="restartButton" class="btn">Play Again</button>
-      </div>
-      <div id="levelUp" class="level-up">
-        <h2>Level Up!</h2>
-        <p id="newLevel">Level: 1</p>
-        <p>Get ready for the next challenge!</p>
-      </div>
+  <div class="game-container">
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <div id="gameOver" class="game-over">
+      <h2>Game Over!</h2>
+      <p id="finalScore">Score: 0</p>
+      <p id="finalLevel">Level: 1</p>
+      <button id="restartButton" class="btn">Play Again</button>
     </div>
-    
-    <div class="instructions">
-      <h2>How to Play</h2>
-      <p>Use arrow keys or WASD to move your character (red circle).</p>
-      <p>Collect green targets while avoiding red obstacles and the walls.</p>
-      <p>Look for power-ups to help your journey:</p>
-      <ul>
-        <li><span style="color: blue; font-weight: 600;">Blue (S)</span>: Speed boost</li>
-        <li><span style="color: purple; font-weight: 600;">Purple (P)</span>: Shield protection</li>
-        <li><span style="color: orange; font-weight: 600;">Orange (T)</span>: Extra time</li>
-        <li><span style="color: gold; font-weight: 600;">Gold ($)</span>: Bonus points</li>
-      </ul>
-      <p>Try to reach the highest level possible before time runs out!</p>
+    <div id="levelUp" class="level-up">
+      <h2>Level Up!</h2>
+      <p id="newLevel">Level: 1</p>
+      <p>Get ready for the next challenge!</p>
     </div>
   </div>
   
@@ -268,7 +123,6 @@
     const difficultySelect = document.getElementById('difficultySelect');
     const levelUpElement = document.getElementById('levelUp');
     const newLevelElement = document.getElementById('newLevel');
-    const fullscreenButton = document.getElementById('fullscreenButton');
 
     // Game state
     let gameState = {
@@ -311,9 +165,6 @@
       effects: [],
       particles: []
     };
-
-    // Game timer
-    let gameTimer;
 
     // Game settings based on difficulty
     const gameDifficulty = {
@@ -378,13 +229,13 @@
       }
       
       gameState.powerUps = [];
-      gameState.score = 0,
-      gameState.lives = 3,
-      gameState.timeLeft = 60,
-      gameState.level = 1,
-      gameState.targetCollected = 0,
-      gameState.effects = [],
-      gameState.particles = [],
+      gameState.score = 0;
+      gameState.lives = 3;
+      gameState.timeLeft = 60;
+      gameState.level = 1;
+      gameState.targetCollected = 0;
+      gameState.effects = [];
+      gameState.particles = [];
       gameState.direction = { x: 0, y: 0 };
       
       gameOverElement.style.display = 'none';
@@ -449,12 +300,7 @@
 
     // Event listeners
     document.addEventListener('keydown', (e) => {
-      if (gameState.gameOver || !gameState.gameStarted || gameState.gamePaused) {
-        if (e.key === 'p' && gameState.gameStarted && !gameState.gameOver) {
-          togglePause();
-        }
-        return;
-      }
+      if (gameState.gameOver || !gameState.gameStarted || gameState.gamePaused) return;
       
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key)) {
         gameState.keysPressed[e.key] = true;
@@ -490,37 +336,11 @@
       }
     });
 
-    // Fullscreen functionality
-    fullscreenButton.addEventListener('click', toggleFullscreen);
-    
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        canvas.requestFullscreen().catch(err => {
-          alert(`Error attempting to enable fullscreen: ${err.message}`);
-        });
-        fullscreenButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5zM0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zm10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4z"/>
-        </svg>`;
-      } else {
-        document.exitFullscreen();
-        fullscreenButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>
-        </svg>`;
-      }
-    }
-
     // Start the game
     function startGame() {
       gameState.gameStarted = true;
       gameState.gamePaused = false;
-      gameState.gameOver = false;
       startButton.textContent = 'Restart Game';
-      pauseButton.textContent = 'Pause';
-      
-      // Clear any existing timer
-      if (gameTimer) {
-        clearInterval(gameTimer);
-      }
       
       // Start the timer
       gameTimer = setInterval(() => {
@@ -548,55 +368,23 @@
 
     // Toggle pause state
     function togglePause() {
-      if (gameState.gameOver || !gameState.gameStarted) return;
-      
       gameState.gamePaused = !gameState.gamePaused;
       pauseButton.textContent = gameState.gamePaused ? 'Resume' : 'Pause';
-      
-      // Show pause message on the canvas immediately
-      if (gameState.gamePaused) {
-        drawPauseOverlay();
-      }
-    }
-
-    // Draw pause overlay
-    function drawPauseOverlay() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      ctx.fillStyle = 'white';
-      ctx.font = 'bold 30px Rubik';
-      ctx.textAlign = 'center';
-      ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
-      ctx.font = '16px Rubik';
-      ctx.fillText('Press P or click Pause to continue', canvas.width / 2, canvas.height / 2 + 30);
     }
 
     // Restart the game
     function restartGame() {
-      // Clear existing timer
-      if (gameTimer) {
-        clearInterval(gameTimer);
-        gameTimer = null;
-      }
-      
       gameState.gameOver = false;
-      gameState.gameStarted = false;
-      
       initGame();
-      startGame();
+      
+      if (!gameState.gameStarted) {
+        startGame();
+      }
     }
 
     // End the game
     function endGame() {
       gameState.gameOver = true;
-      
-      // Clear the timer
-      if (gameTimer) {
-        clearInterval(gameTimer);
-        gameTimer = null;
-      }
-      
       finalScoreElement.textContent = `Score: ${gameState.score}`;
       finalLevelElement.textContent = `Level: ${gameState.level}`;
       gameOverElement.style.display = 'block';
@@ -685,9 +473,6 @@
       // Store previous position
       const prevX = gameState.player.x;
       const prevY = gameState.player.y;
-      
-      // Reset direction for this frame
-      gameState.direction = { x: 0, y: 0 };
       
       // Handle movement based on keys pressed
       if (gameState.keysPressed.ArrowUp || gameState.keysPressed.w) {
@@ -894,11 +679,6 @@
       
       // Draw UI
       drawUI();
-      
-      // Draw pause overlay if paused
-      if (gameState.gamePaused) {
-        drawPauseOverlay();
-      }
     }
 
     // Draw grid
@@ -964,7 +744,7 @@
         
         // Power-up icon
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 12px Rubik';
+        ctx.font = '10px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
@@ -1122,21 +902,8 @@
       }
     }
 
-    // Helper function to convert hex to RGB
-    function hexToRgb(hex) {
-      // Remove # if present
-      hex = hex.replace('#', '');
-      
-      // Convert to RGB
-      const r = parseInt(hex.substring(0, 2), 16) || 255;
-      const g = parseInt(hex.substring(2, 4), 16) || 0;
-      const b = parseInt(hex.substring(4, 6), 16) || 0;
-      
-      return `${r}, ${g}, ${b}`;
-    }
-
-    // Draw effects
-    function drawEffects() {
+// Draw effects
+function drawEffects() {
       for (const effect of gameState.effects) {
         let color;
         
@@ -1167,7 +934,7 @@
     function drawUI() {
       // Draw score
       ctx.fillStyle = 'black';
-      ctx.font = 'bold 16px Rubik';
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'left';
       ctx.fillText(`Score: ${gameState.score}`, 20, 30);
       
@@ -1193,6 +960,32 @@
         ctx.fillStyle = 'purple';
         ctx.fillText(`Shield: ${Math.ceil(gameState.player.effects.shield / 60)}s`, 20, effectY);
       }
+      
+      // Draw pause message
+      if (gameState.gamePaused) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 30px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+        ctx.font = '16px Arial';
+        ctx.fillText('Press P or click Pause to continue', canvas.width / 2, canvas.height / 2 + 30);
+      }
+    }
+
+    // Helper function to convert hex to RGB
+    function hexToRgb(hex) {
+      // Remove # if present
+      hex = hex.replace('#', '');
+      
+      // Convert to RGB
+      const r = parseInt(hex.substring(0, 2), 16) || 255;
+      const g = parseInt(hex.substring(2, 4), 16) || 0;
+      const b = parseInt(hex.substring(4, 6), 16) || 0;
+      
+      return `${r}, ${g}, ${b}`;
     }
 
     // Check target collision and handle target collection
@@ -1243,7 +1036,31 @@
         requestAnimationFrame(gameLoop);
       }
     }
+
+    // Initialize the game
     initGame();
+
+    // Add instructions
+    const instructions = document.createElement('div');
+    instructions.innerHTML = `
+      <h2>How to Play</h2>
+      <p>Use arrow keys or WASD to move your character (red circle).</p>
+      <p>Collect green targets while avoiding red obstacles and the walls.</p>
+      <p>Look for power-ups to help your journey:</p>
+      <ul>
+        <li><span style="color: blue;">Blue (S)</span>: Speed boost</li>
+        <li><span style="color: purple;">Purple (P)</span>: Shield protection</li>
+        <li><span style="color: orange;">Orange (T)</span>: Extra time</li>
+        <li><span style="color: gold;">Gold ($)</span>: Bonus points</li>
+      </ul>
+      <p>Try to reach the highest level possible before time runs out!</p>
+    `;
+    instructions.style.background = 'rgba(255, 255, 255, 0.8)';
+    instructions.style.padding = '15px';
+    instructions.style.borderRadius = '10px';
+    instructions.style.maxWidth = '500px';
+    instructions.style.margin = '15px auto';
+    document.body.appendChild(instructions);
   </script>
 </body>
 </html>
