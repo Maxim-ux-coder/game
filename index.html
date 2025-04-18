@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'R', sans-serif;
+      font-family: 'Rubik', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -132,7 +132,11 @@
         size: 20,
         speed: 5,
         color: '#FF5722',
-        trail: []
+        trail: [],
+        effects: {
+          speed: 0,
+          shield: 0
+        }
       },
       target: {
         x: 300,
@@ -198,6 +202,9 @@
       { type: 'time', duration: 0, color: 'orange', radius: 10 },
       { type: 'point', duration: 0, color: 'gold', radius: 10 }
     ];
+
+    // Game timer variable
+    let gameTimer;
 
     // Initialize game
     function initGame() {
@@ -300,15 +307,16 @@
 
     // Event listeners
     document.addEventListener('keydown', (e) => {
-      if (gameState.gameOver || !gameState.gameStarted || gameState.gamePaused) return;
+      if (gameState.gameOver || !gameState.gameStarted) return;
       
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key)) {
         gameState.keysPressed[e.key] = true;
         e.preventDefault();
       }
       
-      if (e.key === 'p') {
+      if (e.key === 'p' || e.key === 'P') {
         togglePause();
+        e.preventDefault();
       }
     });
 
@@ -340,7 +348,14 @@
     function startGame() {
       gameState.gameStarted = true;
       gameState.gamePaused = false;
+      gameState.gameOver = false;
       startButton.textContent = 'Restart Game';
+      pauseButton.textContent = 'Pause';
+      
+      // Clear any existing timer
+      if (gameTimer) {
+        clearInterval(gameTimer);
+      }
       
       // Start the timer
       gameTimer = setInterval(() => {
@@ -374,12 +389,12 @@
 
     // Restart the game
     function restartGame() {
+      clearInterval(gameTimer);
+      gameState.gameStarted = false;
+      gameState.gamePaused = false;
       gameState.gameOver = false;
       initGame();
-      
-      if (!gameState.gameStarted) {
-        startGame();
-      }
+      startGame();
     }
 
     // End the game
@@ -388,6 +403,7 @@
       finalScoreElement.textContent = `Score: ${gameState.score}`;
       finalLevelElement.textContent = `Level: ${gameState.level}`;
       gameOverElement.style.display = 'block';
+      clearInterval(gameTimer);
     }
 
     // Level up
@@ -895,15 +911,29 @@
     // Draw particles
     function drawParticles() {
       for (const particle of gameState.particles) {
-        ctx.fillStyle = `rgba(${hexToRgb(particle.color)}, ${particle.alpha})`;
+        const rgb = hexToRgb(particle.color);
+        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${particle.alpha})`;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-// Draw effects
-function drawEffects() {
+    // Helper function to convert hex to RGB
+    function hexToRgb(hex) {
+      // Remove # if present
+      hex = hex.replace('#', '');
+      
+      // Convert to RGB
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      
+      return { r, g, b };
+    }
+
+    // Draw effects
+    function drawEffects() {
       for (const effect of gameState.effects) {
         let color;
         
@@ -975,19 +1005,6 @@ function drawEffects() {
       }
     }
 
-    // Helper function to convert hex to RGB
-    function hexToRgb(hex) {
-      // Remove # if present
-      hex = hex.replace('#', '');
-      
-      // Convert to RGB
-      const r = parseInt(hex.substring(0, 2), 16) || 255;
-      const g = parseInt(hex.substring(2, 4), 16) || 0;
-      const b = parseInt(hex.substring(4, 6), 16) || 0;
-      
-      return `${r}, ${g}, ${b}`;
-    }
-
     // Check target collision and handle target collection
     function checkTargetCollision() {
       if (checkCollision(gameState.player, gameState.target)) {
@@ -1039,28 +1056,6 @@ function drawEffects() {
 
     // Initialize the game
     initGame();
-
-    // Add instructions
-    const instructions = document.createElement('div');
-    instructions.innerHTML = `
-      <h2>How to Play</h2>
-      <p>Use arrow keys or WASD to move your character (red circle).</p>
-      <p>Collect green targets while avoiding red obstacles and the walls.</p>
-      <p>Look for power-ups to help your journey:</p>
-      <ul>
-        <li><span style="color: blue;">Blue (S)</span>: Speed boost</li>
-        <li><span style="color: purple;">Purple (P)</span>: Shield protection</li>
-        <li><span style="color: orange;">Orange (T)</span>: Extra time</li>
-        <li><span style="color: gold;">Gold ($)</span>: Bonus points</li>
-      </ul>
-      <p>Try to reach the highest level possible before time runs out!</p>
-    `;
-    instructions.style.background = 'rgba(255, 255, 255, 0.8)';
-    instructions.style.padding = '15px';
-    instructions.style.borderRadius = '10px';
-    instructions.style.maxWidth = '500px';
-    instructions.style.margin = '15px auto';
-    document.body.appendChild(instructions);
   </script>
 </body>
 </html>
